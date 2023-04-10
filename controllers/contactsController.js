@@ -7,18 +7,23 @@ const getAllContacts = asyncHandler(async (req, res) => {
 });
 
 const getContact = asyncHandler(async (req, res) => {
-    res.status(200).json({ message: `Get contact with id ${req.params.id}` });
+    const contact = await Contact.findById(req.params.id);
+    if (!contact) {
+        res.status(404);
+        throw new Error("Contact not Found");
+    }
+    res.status(200).json(contact);
 })
 
 const addContact = asyncHandler(async (req, res) => {
     const { name, email, phone } = req.body;
     if (name && email && phone) {
-        const contact = Contact.create({
+        const contact = await Contact.create({
             name,
             email,
             phone,
         });
-        res.status(200).json(contact);
+        res.status(201).json(contact);
     }
     else {
         res.status(400);
@@ -27,7 +32,17 @@ const addContact = asyncHandler(async (req, res) => {
 });
 
 const updateContact = asyncHandler(async (req, res) => {
-    res.status(200).json({ message: `Update contact with id ${req.params.id}` });
+    const contact = await Contact.findById(req.params.id);
+    if (!contact) {
+        res.status(404);
+        throw new Error("Contact not Found");
+    }
+    const updateContact = await Contact.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true }
+    );
+    res.status(200).json(updateContact);
 });
 
 const deleteContact = asyncHandler(async (req, res) => {

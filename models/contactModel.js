@@ -14,7 +14,7 @@ const contactSchema = mongoose.Schema({
         required: [true, "Please add contact phone number"]
     },
 }, {
-    timestamp: true
+    timestamps: true
 });
 
-module.exports = mongoose.model("contact", contactSchema);
+module.exports = mongoose.model("Contacts", contactSchema);
